@@ -18,8 +18,8 @@
 			] (system: function nixpkgs.legacyPackages.${system});
 	in {
 		packages = forAllSystems (pkgs: {
-			default = self.packages.${pkgs.system}.hyprland-easymotion;
-			hyprland-easymotion = hyprland.packages.${pkgs.system}.hyprland.stdenv.mkDerivation rec {
+			default = self.packages.${pkgs.stdenv.hostPlatform.system}.hyprland-easymotion;
+			hyprland-easymotion = hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.stdenv.mkDerivation rec {
 				name = "hyprland-easymotion";
 				pname = name;
 				src = ./.;
@@ -30,9 +30,9 @@
 				dontUseMesonConfigure = true;
 
 				nativeBuildInputs = [
-					hyprland.packages.${pkgs.system}.hyprland.dev
-				] ++ inputs.hyprland.packages.${pkgs.system}.hyprland.nativeBuildInputs;
-				buildInputs = inputs.hyprland.packages.${pkgs.system}.hyprland.buildInputs;
+					hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.dev
+				] ++ inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.nativeBuildInputs;
+				buildInputs = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.buildInputs;
 
 				installPhase = ''
 					runHook preInstall

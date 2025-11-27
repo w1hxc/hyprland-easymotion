@@ -100,7 +100,7 @@ Add the plugin to your Hyprland Home Manager config:
 ```nix
 wayland.windowManager.hyprland = {
   plugins = [
-    inputs.hyprland-easymotion.packages.${pkgs.system}.hyprland-easymotion
+    inputs.hyprland-easymotion.packages.${pkgs.stdenv.hostPlatform.system}.hyprland-easymotion
   ];
   # ...
 };
