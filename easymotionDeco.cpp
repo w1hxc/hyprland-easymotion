@@ -2,6 +2,7 @@
 
 #include <cairo/cairo.h>
 #include <hyprland/src/Compositor.hpp>
+#include <hyprland/src/desktop/state/FocusState.hpp>
 #include <hyprland/src/render/pass/RectPassElement.hpp>
 #include <hyprland/src/render/pass/TexPassElement.hpp>
 #include <hyprland/src/render/pass/BorderPassElement.hpp>
@@ -126,7 +127,7 @@ void CHyprEasyLabel::draw(PHLMONITOR pMonitor, float const &a) {
 		return;
 
 	const auto PWINDOW = m_pWindow.lock();
-	if (!PWINDOW->m_windowData.decorate.valueOrDefault())
+	if (!PWINDOW->m_ruleApplicator->decorate().valueOrDefault())
 		return;
 	const auto PWORKSPACE      = PWINDOW->m_workspace;
 	const auto WORKSPACEOFFSET = PWORKSPACE && !PWINDOW->m_pinned ? PWORKSPACE->m_renderOffset->value() : Vector2D();
