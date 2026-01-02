@@ -91,7 +91,7 @@ static bool parseBorderGradient(std::string VALUE, CGradientValueData *DATA) {
 			try {
 				DATA->m_angle = std::stoi(var.substr(0, var.find("deg"))) * (PI / 180.0); // radians
 			} catch (...) {
-        Log::logger->log(Log::WARN, "Error parsing gradient {}", V);
+        		Log::logger->log(Log::WARN, "Error parsing gradient {}", V);
 				return false;
 			}
 
