@@ -6,9 +6,10 @@
 #include <any>
 #include <ranges>
 #include <hyprland/src/Compositor.hpp>
-#include <hyprland/src/desktop/Window.hpp>
+#include <hyprland/src/desktop/view/Window.hpp>
 #include <hyprland/src/config/ConfigManager.hpp>
 #include <hyprland/src/managers/EventManager.hpp>
+#include <hyprland/src/debug/log/Logger.hpp>
 #include <strings.h>
 
 #include "easymotionDeco.hpp"
@@ -90,7 +91,7 @@ static bool parseBorderGradient(std::string VALUE, CGradientValueData *DATA) {
 			try {
 				DATA->m_angle = std::stoi(var.substr(0, var.find("deg"))) * (PI / 180.0); // radians
 			} catch (...) {
-				Debug::log(WARN, "Error parsing gradient {}", V);
+        		Log::logger->log(Log::WARN, "Error parsing gradient {}", V);
 				return false;
 			}
 
@@ -98,19 +99,19 @@ static bool parseBorderGradient(std::string VALUE, CGradientValueData *DATA) {
 		}
 
 		if (DATA->m_colors.size() >= 10) {
-			Debug::log(WARN, "Error parsing gradient {}: max colors is 10.", V);
+			Log::logger->log(Log::WARN, "Error parsing gradient {}: max colors is 10.", V);
 			return false;
 		}
 
 		try {
 			DATA->m_colors.push_back(CHyprColor(configStringToInt(var).value_or(0)));
 		} catch (std::exception& e) {
-			Debug::log(WARN, "Error parsing gradient {}", V);
+			Log::logger->log(Log::WARN, "Error parsing gradient {}", V);
 		}
 	}
 
 	if (DATA->m_colors.size() == 0) {
-		Debug::log(WARN, "Error parsing gradient {}", V);
+		Log::logger->log(Log::WARN, "Error parsing gradient {}", V);
 		DATA->m_colors.push_back(0); // transparent
 	}
 
@@ -145,7 +146,7 @@ SDispatchResult easymotionDispatch(std::string args)
 	actionDesc.textColor = **TEXTCOLOR;
 	actionDesc.backgroundColor = **BGCOLOR;
 	actionDesc.textFont = *TEXTFONT;
-	CVarList cpadding = CVarList(*TEXTPADDING);
+	CVarList2 cpadding = CVarList2(*TEXTPADDING);
 	actionDesc.boxPadding.parseGapData(cpadding);
 	actionDesc.rounding = **ROUNDING;
 	actionDesc.borderSize = **BORDERSIZE;
@@ -176,7 +177,7 @@ SDispatchResult easymotionDispatch(std::string args)
 		} else if (kv[0] == "textfont") {
 			actionDesc.textFont = kv[1];
 		} else if (kv[0] == "textpadding") {
-			CVarList padVars = CVarList(kv[1], 0, 's');
+			CVarList2 padVars = CVarList2(kv[1], 0, 's');
 			actionDesc.boxPadding.parseGapData(padVars);
 		} else if (kv[0] == "rounding") {
 			actionDesc.rounding = configStringToInt(kv[1]).value_or(0);
